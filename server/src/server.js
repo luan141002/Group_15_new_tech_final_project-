@@ -1,23 +1,21 @@
-// server/server.js
-const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
-const connectDB = require('./config/db');
-const topicRoutes = require('./routes/topicRoutes');
-
+const express = require('express');
+require('dotenv').config();
+require('./config/db');
+const route = require('./routes');
+const PORT = process.env.PORT || 8800;
 const app = express();
-const PORT = process.env.PORT || 5000;
 
-app.use(bodyParser.json());
+// handle data from client which have URL-encoded type
+app.use(express.urlencoded({extended: true}));
+// handle data from client which have json type
+app.use(express.json());
+
 app.use(cors());
 
-// Connect to MongoDB
-connectDB();
 
-// Routes
-app.use('/api', topicRoutes);
+route(app);
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.listen(PORT , ()=> {
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
